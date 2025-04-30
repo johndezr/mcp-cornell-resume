@@ -1,0 +1,15 @@
+[project]
+name = "mcp-cornell-resume"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "distro>=1.9.0",
+    "exceptiongroup>=1.2.2",
+    "httpx>=0.28.1",
+    "jiter>=0.9.0",
+    "mcp[cli]>=1.6.0",
+    "pydantic>=2.11.3",
+    "websockets>=15.0.1",
+]
