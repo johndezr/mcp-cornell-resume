@@ -10,7 +10,6 @@ import json
 load_dotenv()
 
 async def save_to_notion(summary, tags):
-    json_summary = json.loads(summary)
     url = "https://api.notion.com/v1/pages"
     headers = {
         "Authorization": f"Bearer {NOTION_API_KEY}",
@@ -20,47 +19,9 @@ async def save_to_notion(summary, tags):
     data = {
         "parent": { "database_id": NOTION_DATABASE_ID },
         "properties": {
-            "Name": { "title": [{ "text": { "content": (json_summary["cues"][:10] if json_summary["cues"] else "No title") } }] },
+            "Name": { "title": [{ "text": { "content": (summary["title"] if summary["title"] else "No title") } }] },
         },
-        "children": [
-            {
-                "object": "block",
-                "paragraph": {
-                    "rich_text": [
-                        {
-                            "text": {
-                                "content": json_summary["notes"],
-                            },
-                        }
-                    ],
-                }
-            },
-            {
-                "object": "block",
-                "paragraph": {
-                    "rich_text": [
-                        {
-                            "text": {
-                                "content": json_summary["cues"],
-                            },
-                        }
-                    ],
-                }
-            },
-            {
-                "object": "block",
-                "paragraph": {
-                    "rich_text": [
-                        {
-                            "text": {
-                                "content": json_summary["summary"],
-                            },
-                        }
-                    ],
-                    "color": "default"
-                }
-            }
-        ]
+        "children": summary["blocks"]
     }
     try: 
         response = requests.post(url, headers=headers, json=data)

@@ -1,33 +1,34 @@
 from openai import OpenAI
-import os
 from config import OPENAI_API_KEY
 import logging
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
 client = OpenAI(
-    # This is the default and can be omitted
     api_key=OPENAI_API_KEY,
 )
 
-async def generate_cornell_summary(content):
-    prompt = f"""
-    With the content provided, create a Cornell note with the following format: notes, cues, summary. Return the response in JSON format.
+def load_template(template_name):
+    template_path = Path(__file__).parent.parent / "prompts" / template_name
+    with open(template_path, "r") as f:
+        return f.read()
 
-    Content:
-    {content}
+def load_resource(resource_name):
+    resource_path = Path(__file__).parent.parent / "resources" / resource_name
+    with open(resource_path, "r") as f:
+        return f.read()
+
+async def generate_cornell_summary(content):
+    prompt_template = load_template("cornell_summary_prompt.txt")
+    notion_template = load_resource("notion_block_template.json")
     
-    Eg:
-    {{
-        "notes": "...",
-        "cues": "...",
-        "summary": "..."
-    }}
-    """
+    prompt = prompt_template.replace("{{notion_block_template}}", notion_template)
+    prompt = prompt.replace("{{content}}", content)
+    
     try:
         response = client.responses.create(
             model="gpt-4o-mini",
-            instructions="You are an expert in note taking",
             input=prompt,
             text={
                 "format": {

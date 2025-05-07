@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from services.openai import generate_cornell_summary, generate_embeddings
 from services.pinecone import query_tags
 from services.notion import save_to_notion
+import json
 
 class ResumeRequest(BaseModel):
     url: str | None = None
@@ -14,13 +15,15 @@ async def create_cornell_resume(params: ResumeRequest):
 
   content = params.text or f"Content of {params.url} (simulated)"
 
-  summary = await generate_cornell_summary(content)
-  embedding = await generate_embeddings(summary)
-  tags = await query_tags(embedding)
-  notion_id = await save_to_notion(summary, tags)
+  summary_str = await generate_cornell_summary(content)
+  summary_obj = json.loads(summary_str)
+#   embedding = await generate_embeddings(summary)
+#   tags = await query_tags(embedding)
+  notion_id = await save_to_notion(summary_obj, [])
 
   return {
-      "summary": summary,
-      "tags": tags,
+      "summary": summary_obj,
+      "summary_raw": summary_str,
+      "tags": [],
       "notion_id": notion_id
   }

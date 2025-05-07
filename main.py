@@ -2,7 +2,6 @@ from mcp.server.fastmcp import FastMCP
 from pydantic import BaseModel
 from tools.create_cornell_resume import create_cornell_resume
 import logging
-import uvicorn
 import traceback
 import asyncio
 from fastapi import HTTPException
@@ -15,17 +14,15 @@ logging.basicConfig(
         logging.FileHandler('app.log')
     ]
 )
-
 logger = logging.getLogger(__name__)
 
-# Crear la instancia de FastMCP
 server = FastMCP("cornell-resume", timeout=600)
 
 class ResumeRequest(BaseModel):
     url: str | None = None
     text: str | None = None
 
-@server.tool("create_cornell_resume", description="Genera resumen Cornell, embeddings, tags y guarda en Notion")
+@server.tool("create_cornell_resume", description="From the content of this window chat, generate a Cornell Resume and save it to Notion")
 async def handle_create_cornell_resume(params: dict):
     try:
         logger.info(f"Received request: {params}")
@@ -48,5 +45,4 @@ async def handle_create_cornell_resume(params: dict):
 
 if __name__ == "__main__":
     logger.info("Starting server...")
-    # FastMCP maneja su propio servidor
     server.run()
