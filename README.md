@@ -8,6 +8,8 @@ A service that generates Cornell-style to your Notion summaries from text or URL
 - Creates content embeddings for semantic analysis
 - Automatically tags content
 - Saves results to Notion
+- Uses MCP for efficient prompt and resource management
+- Structured JSON output following Notion API specifications
 
 ## Requirements
 
@@ -15,6 +17,7 @@ A service that generates Cornell-style to your Notion summaries from text or URL
 - OpenAI account
 - Pinecone account
 - Notion account
+- MCP CLI
 
 ## Installation
 
@@ -50,22 +53,25 @@ The service exposes an endpoint that accepts text or URL to generate the summary
 params = {
     "text": "Your text here"  # or "url": "https://example.com"
 }
-result = await create_cornel_resume(params)
+result = await create_cornell_resume(params)
 ```
 
-## Project Structure
+### MCP Integration
 
-```
-.
-├── main.py              # Application entry point
-├── tools/              # Tools and utilities
-│   └── create_cornel_resume.py
-├── services/           # External services
-│   ├── openai.py
-│   ├── pinecone.py
-│   └── notion.py
-└── config.py          # Configuration and environment variables
-```
+The service uses MCP for efficient prompt and resource management:
+
+- **Resources**: Templates for Notion block structure are managed through MCP
+- **Prompts**: Cornell summary generation prompts are managed through MCP
+- **Tools**: The main functionality is exposed as an MCP tool
+
+### Notion Integration
+
+The service generates summaries in the exact format required by the Notion API:
+
+- Uses proper block structure with `rich_text` arrays
+- Supports multiple block types (callout, column_list, headings, etc.)
+- Maintains proper nesting of properties
+- Follows Notion's API specifications
 
 ## Contributing
 
@@ -73,4 +79,4 @@ result = await create_cornel_resume(params)
 
 ## License
 
-[Section pending development]
+MIT License - see LICENSE file for details
