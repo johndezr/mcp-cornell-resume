@@ -19,19 +19,6 @@ A service that generates Cornell-style to your Notion summaries from text or URL
 - Notion account
 - MCP CLI
 
-## Installation
-
-1. Clone the repository
-2. Create a virtual environment:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Unix/MacOS
-   ```
-3. Install dependencies:
-   ```bash
-   uv pip sync requirements.txt
-   ```
-
 ## Configuration
 
 Create a `.env` file in the project root with the following variables:
