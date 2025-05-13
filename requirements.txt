@@ -1,7 +1,6 @@
 fastapi
 uvicorn
 openai
-pinecone
 requests
 python-dotenv
 fastmcp

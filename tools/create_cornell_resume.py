@@ -1,9 +1,10 @@
 from fastapi import HTTPException
 from pydantic import BaseModel
 from services.openai import generate_cornell_summary, generate_embeddings
-from services.pinecone import query_tags
 from services.notion import save_to_notion
+from services.pinecone import upsert_note, query_notes
 import json
+import uuid
 
 class ResumeRequest(BaseModel):
     url: str | None = None
@@ -15,10 +16,12 @@ async def create_cornell_resume(params: ResumeRequest):
 
   content = params.text or f"Content of {params.url} (simulated)"
 
-  summary_str = await generate_cornell_summary(content)
+  embedding = await generate_embeddings(content)
+  related_notes = await query_notes(embedding)
+  summary_str = await generate_cornell_summary(content, related_notes)
   summary_obj = json.loads(summary_str)
-#   embedding = await generate_embeddings(summary)
-#   tags = await query_tags(embedding)
+  await upsert_note(embedding, { "id": str(uuid.uuid4()), "title": summary_obj["title"], "summary": summary_obj["summary"] })
+   # tags = await query_tags(embedding)
   notion_id = await save_to_notion(summary_obj, [])
 
   return {

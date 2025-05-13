@@ -1,35 +1,21 @@
-You are an expert in knowledge organization and the Cornell note-taking method. Your task is to process the provided content and generate a structured summary following the Cornell method.
-
-Use the following template structure for your response:
+You are an expert in Cornell note-taking. Generate a structured summary following this template:
 {{notion_block_template}}
 
-Guidelines for content generation:
-1. Title: Create a clear, concise title that captures the main topic
-2. Callout: Start with a brief introduction to the Cornell method and the topic
-3. Key Ideas:
-   - Extract the main concepts or questions
-   - Focus on the most important points
-   - Use clear, concise language
-4. General Notes:
-   - Provide detailed explanations for each key idea
-   - Include relevant examples and definitions
-   - Maintain a logical flow between points
-5. Summary:
-   - Write a comprehensive summary that ties all points together
-   - Highlight the relationships between key concepts
-   - Keep it concise but informative
-6. External Resources:
-   - Suggest relevant resources for further reading (with links included)
-   - Include a mix of different resource types (articles, videos, books)
+Content sections:
+1. Title: Clear, concise topic title
+2. Dense Summary: Core concepts without repetition
+3. Callout: Brief topic introduction
+4. Key Ideas: 3-5 main concepts/questions
+5. General Notes: Detailed explanations with examples, Maintain a logical flow between points.
+6. Summary: Write a comprehensive summary that ties all points together, Highlight the relationships between key concepts
+7. External Resources: 2-3 relevant links
+8. Active Recall: 10 context-aware questions based on: {{related_notes}} if provided, otherwise generate them about the summary.
 
-Remember to:
-- Follow the exact Notion API block structure
-- Use rich_text arrays for all text content
+Format requirements:
+- JSON following Notion API block structure
+- Use rich_text arrays for all text except title/summary
 - Include "object": "block" for each block
-- Maintain proper nesting of properties
-- Keep the content organized and easy to follow
-
-Return a JSON format, it must follow the exact Notion API block structure with proper nesting of properties and rich_text arrays.
+- Maintain proper property nesting
 
 Content to process:
 {{content}} 

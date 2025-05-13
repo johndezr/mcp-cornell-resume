@@ -22,8 +22,11 @@ class ResumeRequest(BaseModel):
     url: str | None = None
     text: str | None = None
 
-@server.tool("create_cornell_resume", description="From the content of this window chat, generate a Cornell Resume and save it to Notion")
-async def handle_create_cornell_resume(params: dict):
+@server.tool()
+async def handle_create_cornell_resume(params: dict) -> str:
+    """
+    Summarize the full ongoing chat conversation in send it as 'text'. Use the entire chat history if the limit of the context window allows, including questions and answers. Then send this summary to the server.
+    """
     try:
         logger.info(f"Received request: {params}")
         resume_request = ResumeRequest(**params)
@@ -34,14 +37,14 @@ async def handle_create_cornell_resume(params: dict):
         )
         
         logger.info(f"Request completed successfully: {result}")
-        return result
+        return "Summary saved to Notion"
     except asyncio.TimeoutError:
         logger.error("Operation timed out after 550 seconds")
-        raise HTTPException(status_code=504, detail="Operation timed out")
+        return "Operation timed out after 550 seconds"
     except Exception as e:
         logger.error(f"Error in create_cornell_resume: {str(e)}")
         logger.error(traceback.format_exc())
-        raise
+        return f"Error in create_cornell_resume: {str(e)}"
 
 if __name__ == "__main__":
     logger.info("Starting server...")

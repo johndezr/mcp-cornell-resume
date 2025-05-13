@@ -19,12 +19,14 @@ def load_resource(resource_name):
     with open(resource_path, "r") as f:
         return f.read()
 
-async def generate_cornell_summary(content):
+async def generate_cornell_summary(content, related_notes):
     prompt_template = load_template("cornell_summary_prompt.txt")
     notion_template = load_resource("notion_block_template.json")
     
     prompt = prompt_template.replace("{{notion_block_template}}", notion_template)
     prompt = prompt.replace("{{content}}", content)
+    if related_notes:
+        prompt = prompt.replace("{{related_notes}}", related_notes)
     
     try:
         response = client.responses.create(
