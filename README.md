@@ -119,32 +119,7 @@ Summarize the full ongoing chat conversation in send it as 'text'.
 
 ### Visual Flow Diagram
 
-```mermaid
-graph TD
-    A[MCP Client Input<br/>Chat Conversation Text] --> B[🧠 Generate Embeddings<br/>OpenAI API]
-
-    B --> C[🔍 Query Related Notes<br/>Pinecone Vector Search]
-
-    B --> D[📝 Generate Summary<br/> + Related Related Notes]
-    C --> D
-
-    D --> E[📋 Parse JSON Response<br/>Structure Summary Object]
-
-    E --> F[💾 Upsert to Vector DB<br/>Store New Note in Pinecone]
-
-    E --> G[🗂️ Save to Notion<br/>Create Formatted Page]
-
-    G --> H[✅ Return Notion Page ID<br/>Success Response]
-
-    style A fill:#e1f5fe
-    style B fill:#f3e5f5
-    style C fill:#e8f5e9
-    style D fill:#fff3e0
-    style E fill:#fce4ec
-    style F fill:#e3f2fd
-    style G fill:#f1f8e9
-    style H fill:#e8eaf6
-```
+![visual flow diagram](visual-diagram.png "Visual Flow Diagram")
 
 ## Development
 
