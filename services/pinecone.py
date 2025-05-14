@@ -1,17 +1,18 @@
 from pinecone import Pinecone
-from config import PINECONE_API_KEY
+from config import PINECONE_API_KEY, PINECONE_INDEX_NAME
 import logging
 
 logger = logging.getLogger(__name__)
 
 pc = Pinecone(api_key=PINECONE_API_KEY)
-index = pc.Index("cornell-resumes")
+index = pc.Index(PINECONE_INDEX_NAME)
 
 async def query_notes(embedding):
     try:
-        result = index.query(vector=embedding, top_k=3, score_threshold=0.6, include_metadata=True)
+        result = index.query(vector=embedding, top_k=3, score_threshold=0.5, include_metadata=True)
         logger.info(f"PINECONE QUERY RELATED NOTES: {result}")
-        return result.matches[0].metadata["summary"] if result.matches else ""
+        summaries_text = "\n".join([match.metadata["title"] for match in result.matches])
+        return summaries_text
     except Exception as e:
         logger.error(f"Error in query_notes: {str(e)}")
         raise e

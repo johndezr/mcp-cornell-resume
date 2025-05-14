@@ -12,7 +12,7 @@ class ResumeRequest(BaseModel):
 
 async def create_cornell_resume(params: ResumeRequest):
   if not params.text and not params.url:
-      raise HTTPException(status_code=400, detail="You should provide a 'text' or 'url'.")
+      raise HTTPException(status_code=400, detail="You should provide a 'text'.")
 
   content = params.text or f"Content of {params.url} (simulated)"
 
@@ -21,12 +21,8 @@ async def create_cornell_resume(params: ResumeRequest):
   summary_str = await generate_cornell_summary(content, related_notes)
   summary_obj = json.loads(summary_str)
   await upsert_note(embedding, { "id": str(uuid.uuid4()), "title": summary_obj["title"], "summary": summary_obj["summary"] })
-   # tags = await query_tags(embedding)
   notion_id = await save_to_notion(summary_obj, [])
 
   return {
-      "summary": summary_obj,
-      "summary_raw": summary_str,
-      "tags": [],
-      "notion_id": notion_id
+      "notion_page_id": notion_id
   }
